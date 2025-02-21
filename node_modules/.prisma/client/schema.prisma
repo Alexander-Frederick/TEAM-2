@@ -1,0 +1,68 @@
+// schema.prisma
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Professor {
+  professorId Int        @id @default(autoincrement())
+  email       String     @unique
+  name        String
+  phoneNumber String
+  classes     Class[]
+  feedback    Feedback[]
+}
+
+model Tutor {
+  tutorId      Int            @id @default(autoincrement())
+  email        String         @unique
+  name         String
+  availability String // Stored as stringified JSON
+  classes      Class[]
+  sessions     StudySession[]
+  feedback     Feedback[]
+}
+
+model Student {
+  studentId Int        @id @default(autoincrement())
+  email     String     @unique
+  name      String
+  feedback  Feedback[]
+}
+
+model Class {
+  classId    Int            @id @default(autoincrement())
+  courseCode String         @unique
+  name       String
+  professors Professor[]
+  tutors     Tutor[]
+  sessions   StudySession[]
+  Feedback   Feedback[]
+}
+
+model StudySession {
+  sessionId Int    @id @default(autoincrement())
+  tutorId   Int
+  tutor     Tutor  @relation(fields: [tutorId], references: [tutorId])
+  classCode String
+  class     Class  @relation(fields: [classCode], references: [courseCode])
+  location  String
+  time      String // Stored as stringified JSON
+}
+
+model Feedback {
+  feedbackId  Int        @id @default(autoincrement())
+  studentId   Int
+  student     Student    @relation(fields: [studentId], references: [studentId])
+  professorId Int?
+  professor   Professor? @relation(fields: [professorId], references: [professorId])
+  tutorId     Int?
+  tutor       Tutor?     @relation(fields: [tutorId], references: [tutorId])
+  classCode   String
+  class       Class      @relation(fields: [classCode], references: [courseCode])
+  feedback    String
+}
