@@ -55,33 +55,30 @@ Name    Date    Reason      For     Changes     Version
 1. INTRODUCTION
 
 1.1 System Overview
-< This paragraph shall briefly state the purpose of the system and the software to which this
-document applies. >
+//Scholar Station is a React application designed to allow students find tutors for their varying subjects and courses, allow tutors to provide feedback to professors and professors to access the feedback given from the tutors.
 
 1.2 Version Overview
-< This paragraph shall briefly state the state the changes made for this version of the software to
-which this document applies.>
+//This is version 1, allowing students to login to the system with their credentials and see the available courses.
 
 1.3 Team Contributions
-<Breakdown of the contributions for each team member. This should give a report on what portions
-of the software system each team member contributed to. Note, writing documentation or putting
-together powerpoint slides are part of everyone’s responsibilities, just as coding and testing are
-everyone’s responsibilities. A student who does not contribute to one area or another will receive a
-lower contribution score. Everyone in the group should be able to identify clearly how they
-contributed to the development. This is not meant to prevent your group from working as a team.
-Instead it is meant to make sure that every member of the team is included in the project.>
+//
+Alex- Database and cooresponding Network Support
+Modeste- UI and Front End Login
+Chris- Student Search
+Charlie- SVD and User Authentication
 
 1.4 Document Conventions
 <Any conventions used within this document>
 
 1.5 References
-<List any other documents or Web addresses to which this document refers. >
+//
+https://github.com/users/Alexander-Frederick/projects/6/views/1
+https://github.com/Alexander-Frederick/TEAM-2
 
 2. INVENTORY OF MATERIALS
 
 2.1 Documents Released
-<Describe any relevant documents pertaining to this version of the software system. This can
-include relevant README files and user manuals.>
+//README and SVD
 
 2.2 Executable Media Released
 <Describe any executable files that are included with this software system>
