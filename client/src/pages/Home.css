@@ -1,0 +1,74 @@
+.home-page {
+  width: 100vw; /* Full viewport width */
+  min-height: 100vh; /* Full viewport height */
+  background: url('../images/library-img.jpg') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+  
+  .home-page h1 {
+    color: rgb(134, 10, 134);
+  }
+  
+  /* Search form container */
+  .search-form {
+    width: 100%;
+    max-width: 680px;
+    margin-top: 2rem;
+  }
+  
+  /* Styled search form element */
+  .search-form-elem {
+    display: flex;
+    align-items: center;
+    padding: 1.4rem 2.8rem;
+    border-radius: 3.8rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.5);
+    background-color: #ffffff;
+  }
+  
+  /* Input styling */
+  .search-form-elem .form-control {
+    flex: 1;
+    font-size: 2rem;
+    padding: 0.8rem;
+    border: none;
+    outline: none;
+    background-color: transparent;
+  }
+  
+  /* Placeholder styling */
+  .search-form-elem .form-control::placeholder {
+    opacity: 0.9;
+  }
+  
+  .search-form-elem .form-control:focus::placeholder {
+    opacity: 0.6;
+  }
+  
+  /* Button styling */
+  .search-form-elem button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.8rem;
+  }
+  
+  .search-form-elem button:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Optional text colors */
+  .text-purple {
+    color: #8a3ffc;
+  }
+  
+  .text-red {
+    color: #ff5858;
+  }
+  
