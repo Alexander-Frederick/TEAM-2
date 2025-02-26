@@ -1,8 +1,14 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const bcrypt = require('bcrypt');
 
 async function resetSequences() {
   await prisma.$executeRaw`UPDATE sqlite_sequence SET seq = 0;`;
+}
+
+async function hashPassword(password) {
+  const saltRounds = 10;
+  return bcrypt.hash(password, saltRounds);
 }
 
 async function seedDatabase() {
@@ -12,39 +18,49 @@ async function seedDatabase() {
     prisma.feedback.deleteMany(),
     prisma.studySession.deleteMany(),
     prisma.class.deleteMany(),
-    prisma.student.deleteMany(),
-    prisma.tutor.deleteMany(),
-    prisma.professor.deleteMany(),
+    prisma.user.deleteMany(),
   ]);
 
   // Reset all sequences to 0
   await resetSequences();
   console.log('Reset sequences...');
 
-  console.log('Creating professors...');
-  const professor1 = await prisma.professor.create({
+  // Default password for test accounts
+  const defaultPassword = await hashPassword('password123');
+
+  console.log('Creating users...');
+  
+  // Create Professor 1
+  const professor1 = await prisma.user.create({
     data: {
       email: 'smith@university.edu',
+      password: defaultPassword,
       name: 'Dr. Smith',
-      phoneNumber: '555-0100'
+      phoneNumber: '555-0100',
+      role: 'PROFESSOR'
     }
   });
-  console.log(`Created professor: ${professor1.name} with ID: ${professor1.professorId}`);
+  console.log(`Created professor: ${professor1.name} with ID: ${professor1.id}`);
 
-  const professor2 = await prisma.professor.create({
+  // Create Professor 2
+  const professor2 = await prisma.user.create({
     data: {
       email: 'jones@university.edu',
+      password: defaultPassword,
       name: 'Dr. Jones',
-      phoneNumber: '555-0101'
+      phoneNumber: '555-0101',
+      role: 'PROFESSOR'
     }
   });
-  console.log(`Created professor: ${professor2.name} with ID: ${professor2.professorId}`);
+  console.log(`Created professor: ${professor2.name} with ID: ${professor2.id}`);
 
-  console.log('Creating tutor...');
-  const tutor = await prisma.tutor.create({
+  // Create Tutor
+  const tutor = await prisma.user.create({
     data: {
       email: 'tutor@university.edu',
+      password: defaultPassword,
       name: 'Jane Doe',
+      role: 'TUTOR',
       availability: JSON.stringify({
         monday: [
           { start: "16:00", end: "18:00" },
@@ -56,16 +72,18 @@ async function seedDatabase() {
       })
     }
   });
-  console.log(`Created tutor: ${tutor.name} with ID: ${tutor.tutorId}`);
+  console.log(`Created tutor: ${tutor.name} with ID: ${tutor.id}`);
 
-  console.log('Creating student...');
-  const student = await prisma.student.create({
+  // Create Student
+  const student = await prisma.user.create({
     data: {
       email: 'student@university.edu',
-      name: 'John Student'
+      password: defaultPassword,
+      name: 'John Student',
+      role: 'STUDENT'
     }
   });
-  console.log(`Created student: ${student.name} with ID: ${student.studentId}`);
+  console.log(`Created student: ${student.name} with ID: ${student.id}`);
 
   console.log('Creating classes...');
   const cs101 = await prisma.class.create({
@@ -73,10 +91,15 @@ async function seedDatabase() {
       courseCode: 'CS101',
       name: 'Introduction to Computer Science',
       professors: {
-        connect: [{ professorId: professor1.professorId }, { professorId: professor2.professorId }]
+        connect: [
+          { id: professor1.id }, 
+          { id: professor2.id }
+        ]
       },
       tutors: {
-        connect: [{ tutorId: tutor.tutorId }]
+        connect: [
+          { id: tutor.id }
+        ]
       }
     }
   });
@@ -87,10 +110,10 @@ async function seedDatabase() {
       courseCode: 'CS102',
       name: 'Data Structures',
       professors: {
-        connect: [{ professorId: professor1.professorId }]
+        connect: [{ id: professor1.id }]
       },
       tutors: {
-        connect: [{ tutorId: tutor.tutorId }]
+        connect: [{ id: tutor.id }]
       }
     }
   });
@@ -99,7 +122,7 @@ async function seedDatabase() {
   console.log('Creating study session...');
   const studySession = await prisma.studySession.create({
     data: {
-      tutorId: tutor.tutorId,
+      tutorId: tutor.id,
       classCode: 'CS101',
       location: 'Library Room 101',
       time: JSON.stringify({
@@ -112,25 +135,36 @@ async function seedDatabase() {
   console.log(`Created study session with ID: ${studySession.sessionId}`);
 
   console.log('Creating feedback...');
-  const professorFeedback = await prisma.feedback.create({
+  const studentToProfessorFeedback = await prisma.feedback.create({
     data: {
-      studentId: student.studentId,
-      professorId: professor1.professorId,
+      fromStudentId: student.id,
+      professorId: professor1.id,
       classCode: 'CS101',
       feedback: "Great professor, very clear explanations"
     }
   });
-  console.log(`Created professor feedback with ID: ${professorFeedback.feedbackId}`);
+  console.log(`Created student to professor feedback with ID: ${studentToProfessorFeedback.feedbackId}`);
 
-  const tutorFeedback = await prisma.feedback.create({
+  const studentToTutorFeedback = await prisma.feedback.create({
     data: {
-      studentId: student.studentId,
-      tutorId: tutor.tutorId,
+      fromStudentId: student.id,
+      tutorId: tutor.id,
       classCode: 'CS101',
       feedback: "Very helpful tutor session"
     }
   });
-  console.log(`Created tutor feedback with ID: ${tutorFeedback.feedbackId}`);
+  console.log(`Created student to tutor feedback with ID: ${studentToTutorFeedback.feedbackId}`);
+  
+  // Tutor giving feedback to professor
+  const tutorToProfessorFeedback = await prisma.feedback.create({
+    data: {
+      fromTutorId: tutor.id,
+      professorId: professor1.id,
+      classCode: 'CS101',
+      feedback: "Students are responding well to your teaching methods. The study group had some questions about the last assignment that I tried to clarify."
+    }
+  });
+  console.log(`Created tutor to professor feedback with ID: ${tutorToProfessorFeedback.feedbackId}`);
 }
 
 seedDatabase()
