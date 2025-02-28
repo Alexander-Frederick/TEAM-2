@@ -1,0 +1,56 @@
+/* src/components/ClassCard.css */
+.class-card {
+  color: black; 
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: calc(50% - 42px); 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.class-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.class-title {
+  color: orange; 
+  margin-bottom: 0.5rem;
+}
+
+.class-description {
+  color: green; 
+  margin-bottom: 1rem;
+}
+
+/* Button styles */
+.class-card button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Styling for Dark Mode */
+.dark-app .class-title {
+  color: orange !important; 
+}
+
+.dark-app .class-description {
+  color: green !important; 
+}
+
+/* The card itself in dark mode */
+.dark-app .class-card {
+  color: white; 
+  background-color: #222; 
+}
+
+.dark-app .class-card button {
+  background-color: #0066cc; 
+}
